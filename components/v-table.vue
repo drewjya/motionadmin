@@ -1,79 +1,97 @@
 <script lang="ts" setup>
-const loading = ref(false);
+import type { Column } from "../types/t-table";
 
-const columns = [
-  {
-    key: "name",
-    label: "Name",
-
-    color: getRandomHexColor(),
+const props = defineProps({
+  columns: {
+    type: Array<Column>,
+    required: true,
   },
-  {
-    key: "price",
-    label: "Price",
-    color: getRandomHexColor(),
+  items: {
+    type: Array,
+    required: true,
   },
-  {
-    key: "stock",
-    label: "Stock",
-    color: getRandomHexColor(),
+  loading: {
+    type: Boolean,
+    default: false,
   },
-  {
-    key: "stock",
-    label: "Stock",
-    color: getRandomHexColor(),
+  error: {
+    type: String,
+    required: false,
   },
-  {
-    key: "stock",
-    label: "St ashhshaock",
-    color: getRandomHexColor(),
-  },
-  {
-    key: "stock",
-    label: "Sto ashsahshack",
-    color: getRandomHexColor(),
-  },
-  {
-    key: "stock",
-    label: "Stock",
-    color: getRandomHexColor(),
-  },
-];
+});
 
 const color = "red";
-const columnLength = computed(() => columns.length);
-function getRandomHexColor(): string {
-  const red = Math.floor(Math.random() * 256);
-  const green = Math.floor(Math.random() * 256);
-  const blue = Math.floor(Math.random() * 256);
-  const hexColor = `bg-[#${red.toString(16).padStart(2, "0")}${green
-    .toString(16)
-    .padStart(2, "0")}${blue.toString(16).padStart(2, "0")}]`;
-  return hexColor;
-}
+const columnLength = computed(() => props.columns.length);
+const itemsLength = computed(() => props.items.length);
+
+const getItem = (val: any, key: string) => {
+  return val[key];
+};
 </script>
 
 <template>
-  <div class="w-max">
-    <div v-for="(column, index) in columns">
-      {{ column.label }}
+  <div class="w-full overflow-x-auto border dark:border-gray-400">
+    <div class="w-full">
+      <div class="grid-row">
+        <div
+          v-for="(column, index) in columns"
+          class="dark:bg-slate-900 text-black dark:text-white py-2 text-center border dark:border-gray-400 bg-slate-300"
+        >
+          {{ column.label }}
+        </div>
+      </div>
+
+      <div v-if="!loading || error === undefined">
+        <div v-for="item in items" class="grid-row">
+          <div
+            v-for="(column, index) in columns"
+            class="dark:bg-slate-700 text-black dark:text-white py-2 text-center border dark:border-gray-400"
+          >
+            {{ getItem(item, column.key) }}
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div
+    v-if="loading"
+    class="h-52 grid place-items-center border dark:border-gray-400"
+  >
+    <div>Loading...</div>
+  </div>
+  <div
+    v-if="error"
+    class="h-52 grid place-items-center border dark:border-gray-400"
+  >
+    <div>{{ error }}</div>
   </div>
 </template>
 
 <style scoped>
 .grid-row {
   display: grid;
-  overflow-x: auto;
 
-  background-color: v-bind(color);
   grid-template-columns: repeat(
     v-bind(columnLength),
-    minmax(150px, 1fr)
+    minmax(200px, 1fr)
   ); /* Adjust minmax values as needed */
-  gap: 10px;
-  border: 1px solid #ccc;
+}
+::-webkit-scrollbar {
+  height: 5px;
+}
 
-  /* overflow-x: auto; */
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>
