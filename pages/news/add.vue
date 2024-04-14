@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { z } from "zod";
-
 definePageMeta({
   layout: "form",
 });
+
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -11,6 +11,8 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
+
+const data = ref();
 
 const formD = useFormd({
   schema: z.object({
@@ -29,7 +31,12 @@ const formD = useFormd({
       .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
         message: "Please choose .json format files only",
       }),
+    news: z.string({
+      required_error: "News is required",
+      invalid_type_error: "News must be a string",
+    }),
   }),
+
   onSubmit: async (event, d) => {},
   onError: async (event, d) => {},
 });
@@ -64,6 +71,8 @@ const uploadImage = (e: FileList) => {
       </button>
       <UInput type="file" @change="uploadImage" />
     </u-form-group>
+    <v-editor v-model="formD.state.news" />
+    <p>{{ formD.state.news }}</p>
     <u-button
       @click="formD.submit.value"
       type="button"

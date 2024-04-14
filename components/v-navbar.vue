@@ -31,13 +31,20 @@ const onClickOutsideHandler: [(evt: any) => void, OnClickOutsideOptions] = [
   },
   { ignore: [ignoreRef, ingnoreTheme] },
 ];
+
+const props = defineProps({
+  form: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <template>
   <div
     class="dark:bg-slate-900 bg-slate-400 p-4 pl-0 flex items-center h-20 text-black dark:text-white"
   >
-    <div class="md:hidden">
+    <div class="md:hidden" v-if="!form">
       <button
         class="flex flex-col h-12 w-12 justify-center items-center group"
         @click="app.clickSidebar()"
@@ -69,6 +76,17 @@ const onClickOutsideHandler: [(evt: any) => void, OnClickOutsideOptions] = [
           </div>
         </div>
       </button>
+    </div>
+    <div v-else>
+      <u-button
+        icon="i-heroicons-arrow-left"
+        dynamic
+        solid
+        @click="$router.go(-1)"
+        square
+        class="hover:!bg-red-900 rounded-md ml-4 bg-white text-red-950 hover:text-white"
+        size="lg"
+      />
     </div>
     <div class="flex items-center justify-between w-full">
       <h1 class="text-2xl font-bold ml-5">Motion Sport Indonesia</h1>

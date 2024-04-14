@@ -6,7 +6,12 @@ export default defineNuxtConfig({
     "@vueuse/motion/nuxt",
     "@formkit/auto-animate/nuxt",
     "@vueuse/nuxt",
+    "nuxt-tiptap-editor",
   ],
+  tiptap: {
+    prefix: "Tiptap",
+    
+  },
   ui: {
     global: true,
   },

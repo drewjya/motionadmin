@@ -28,11 +28,17 @@ export const useApp = () => {
       link: "/compro",
       title: "Compro",
     },
+    {
+      link: "/news",
+      title: "News",
+    },
   ];
 
+  const pageForBanner = ["/gallery", "/products"];
   return {
     isActive,
     pages,
+    pageForBanner,
     clickSidebar() {
       isActive.value = !isActive.value;
     },

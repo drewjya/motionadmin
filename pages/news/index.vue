@@ -8,7 +8,7 @@ const title = ref("");
 
 <template>
   <div class="flex flex-col gap-2">
-    <n-link label="Add Product" to="/product/add" />
+    <n-link label="Add News" to="/news/add" />
     <v-table
       :columns="[
         {

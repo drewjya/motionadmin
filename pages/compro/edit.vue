@@ -1,9 +1,13 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+definePageMeta({
+  layout: "form",
+});
+
+const news = ref();
+</script>
 
 <template>
-  <div>
-    Page: compro/edit
-  </div>
+  <v-editor v-model="news" />
 </template>
 
 <style scoped></style>
