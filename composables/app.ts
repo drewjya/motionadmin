@@ -1,49 +1,40 @@
-export const useApp = () => {
+import { defineStore } from "pinia";
+import { page } from "~/types/t-table";
+
+const REFRESH_TOKEN = "REFRESH_TOKEN_MOTION";
+export type User = {
+  name: string;
+  email: string;
+  userId: number;
+  accountId: number;
+  token: Token;
+};
+
+export type Token = {
+  access_token: string;
+  refresh_token: string;
+};
+export const useApp = defineStore("GlobalAppStore", () => {
   const isActive = ref(false);
-  const pages: {
-    title: string;
-    link: string;
-  }[] = [
-    {
-      title: "Home",
-      link: "/",
-    },
-    {
-      title: "Product",
-      link: "/product",
-    },
-    {
-      title: "Gallery",
-      link: "/gallery",
-    },
-    {
-      title: "Carousel",
-      link: "/carousel",
-    },
-    {
-      title: "Banner",
-      link: "/banner",
-    },
-    {
-      link: "/compro",
-      title: "Compro",
-    },
-    {
-      link: "/news",
-      title: "News",
-    },
-  ];
+  const accessToken = ref<string | undefined>("invalid_token");
+  const refreshToken = useCookie<string | undefined>(REFRESH_TOKEN, {
+    maxAge: 3600 * 30,
+  });
+
+  const pages = page;
 
   const pageForBanner = ["/gallery", "/products"];
   return {
     isActive,
     pages,
     pageForBanner,
+    accessToken,
     clickSidebar() {
       isActive.value = !isActive.value;
     },
     turnOffSidebar() {
       isActive.value = false;
     },
+    refreshToken,
   };
-};
+});

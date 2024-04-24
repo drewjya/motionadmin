@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@nuxt/image": "^1.6.0",
     "@nuxt/ui": "^2.13.0",
     "@vueuse/core": "^10.9.0",
     "@vueuse/nuxt": "^10.9.0",
@@ -23,7 +24,6 @@
     "@tailwindcss/typography": "^0.5.12",
     "@tiptap/extension-underline": "^2.3.0",
     "@vueuse/motion": "^2.1.0",
-    "axios": "^1.6.8",
     "pinia": "^2.1.7",
     "zod": "^3.22.4"
   }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Column } from "../types/t-table";
+import { ColumnType, type Column } from "../types/t-table";
 
 const props = defineProps({
   columns: {
@@ -7,8 +7,8 @@ const props = defineProps({
     required: true,
   },
   items: {
-    type: Array,
-    required: true,
+    type: Object as PropType<any[]>,
+    required: false,
   },
   loading: {
     type: Boolean,
@@ -22,7 +22,7 @@ const props = defineProps({
 
 const color = "red";
 const columnLength = computed(() => props.columns.length);
-const itemsLength = computed(() => props.items.length);
+const itemsLength = computed(() => props.items?.length ?? 0);
 
 const getItem = (val: any, key: string) => {
   return val[key];
@@ -47,7 +47,15 @@ const getItem = (val: any, key: string) => {
             v-for="(column, index) in columns"
             class="dark:bg-slate-700 text-black dark:text-white py-2 text-center border dark:border-gray-400"
           >
-            {{ getItem(item, column.key) }}
+            <img
+              v-if="column.type === ColumnType.IMAGE"
+              :src="getItem(item, column.key)"
+            />
+            <p v-else-if="column.type === ColumnType.ARRAY">
+              {{ getItem(item, column.key) }}
+            </p>
+
+            <p v-else>{{ getItem(item, column.key) }}</p>
           </div>
         </div>
       </div>

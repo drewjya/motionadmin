@@ -22,7 +22,7 @@ export function useFormd<T extends z.ZodRawShape>(arg: {
 
   initial?: FormInitialValue<typeof arg.schema>;
 }) {
-  const notif = useNotif();
+  const notif = useNotification();
   const clientSubmitWrapperFunction = ref<() => void>();
   const isLoading = ref(false);
   const state = reactive(initialStates(arg.schema, arg.initial));
@@ -47,8 +47,15 @@ export function useFormd<T extends z.ZodRawShape>(arg: {
       await arg.onSubmit(formSubmitEvent, formRef);
     } catch (e) {
       const response = e as SResponse<any>;
+      console.log(response, "Submit Respo");
+
       // notify(response);
-      // error.value = response.messages;
+      error.value = mapError(formRef, response);
+      console.log(error.value, "ERROR VAl");
+
+      if (error.value) {
+        notify(response, error.value);
+      }
       if (arg.onError) await arg.onError(error, formRef);
     }
     isLoading.value = false;
@@ -59,6 +66,48 @@ export function useFormd<T extends z.ZodRawShape>(arg: {
     for (const [name] of states) {
       state[name] = undefined;
       if (arg.initial && arg.initial[name]) state[name] = arg.initial[name];
+    }
+  }
+
+  function notify(response: SResponse<any>, message?: string) {
+    if (message && response.code) {
+      if (response.code >= 400 && response.code <= 499)
+        notif.warn({ message: message });
+      else if (response.code >= 500 && response.code <= 599)
+        notif.error({ message: message });
+      else if (response.code >= 200 && response.code <= 299)
+        notif.ok({ message: message });
+    }
+  }
+
+  function mapError(
+    formApi: Ref<UFormApi | undefined>,
+    response: SResponse<any>
+  ) {
+    let rootErrorMessage: string | undefined;
+    console.log(
+      `response.code >= 400  ${response.code >= 400} || response.code < 500 ${
+        response.code < 500
+      } || && response.messages ${response.messages}`
+    );
+
+    if (response.code >= 400 && response.code <= 500 && response.messages) {
+      const errorEntries = Object.entries(response.messages);
+
+      formApi.value?.setErrors(
+        errorEntries
+          .filter(([key, validationCode]) => {
+            if (key === "@root") rootErrorMessage = validationCode;
+            return key !== "@root";
+          })
+          .map(([key, validationCode]) => {
+            return {
+              path: key,
+              message: validationCode,
+            };
+          })
+      );
+      return rootErrorMessage;
     }
   }
 

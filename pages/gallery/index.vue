@@ -1,16 +1,19 @@
 <script lang="ts" setup>
-import { z } from "zod";
+import type { SResponse } from "~/types/s-response";
 import { ColumnType } from "../../types/t-table";
 
-const isOpen = ref(false);
-
-const formD = useFormd({
-  schema: z.object({}),
-  onSubmit: async (event, d) => {},
-  onError: async (event, d) => {},
+const page = ref(1);
+const limit = 10;
+const url = computed(() => apiPath().getGallery(page.value, limit));
+const { data, error, refresh, pending } = await useFetch(url, {
+  baseURL: "https://api.motionsportindonesia.id",
+  transform: (data: SResponse<any>) => {
+    return {
+      value: data.data,
+      meta: data.meta,
+    };
+  },
 });
-
-const title = ref("");
 </script>
 
 <template>
@@ -23,12 +26,13 @@ const title = ref("");
           label: 'ID',
           type: ColumnType.TEXT,
         },
-      ]"
-      :items="[
         {
-          id: '1',
+          key: 'image',
+          label: 'Image',
+          type: ColumnType.IMAGE,
         },
       ]"
+      :items="data?.value"
     />
   </div>
 </template>

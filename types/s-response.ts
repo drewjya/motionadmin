@@ -1,7 +1,7 @@
 export type SResponse<T> = {
   code: number;
   messages: Object;
-  data: T;
+  data: T|undefined;
   meta: Meta | undefined;
 };
 
@@ -12,4 +12,20 @@ export type Meta = {
   previous_page: number;
   count: number;
   total_page: number;
+};
+
+export type Product<T> = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  image: string;
+  serial_code: string;
+  categories: T[];
+};
+
+export type CategoryProduct = {
+  id: number;
+  name: string;
 };

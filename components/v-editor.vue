@@ -23,7 +23,7 @@ const editor = useEditor({
   extensions: [TiptapStarterKit, Underline],
   injectCSS: true,
   content: props.modelValue,
-  onUpdate: (editor) => {
+  onBlur: (editor) => {
     emit("update:modelValue", editor.editor.getHTML());
   },
 });

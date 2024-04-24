@@ -1,9 +1,12 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>
-    Layout: auth
-    <slot />
+  <div class="flex flex-col h-screen">
+    <v-navbar />
+
+    <div class="p-4">
+      <slot />
+    </div>
   </div>
 </template>
 

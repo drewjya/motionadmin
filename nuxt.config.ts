@@ -7,10 +7,11 @@ export default defineNuxtConfig({
     "@formkit/auto-animate/nuxt",
     "@vueuse/nuxt",
     "nuxt-tiptap-editor",
+    "@nuxt/image",
+    ["@pinia/nuxt", { autoImports: ["defineStore", "defineStore"] }],
   ],
   tiptap: {
     prefix: "Tiptap",
-    
   },
   ui: {
     global: true,

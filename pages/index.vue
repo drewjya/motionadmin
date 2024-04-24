@@ -8,8 +8,9 @@ function removeItem(toRemove) {
 </script>
 
 <template>
-  <h5>Click emojis to remove them.</h5>
-  <ul>
-    <p>{{ items }}</p>
-  </ul>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="col-span-1 bg-red-400 h-40"></div>
+    <div class="col-span-1 bg-red-400 h-40"></div>
+    <div class="col-span-1 bg-red-400 h-40"></div>
+  </div>
 </template>

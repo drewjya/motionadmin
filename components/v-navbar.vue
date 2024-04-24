@@ -52,20 +52,20 @@ const props = defineProps({
       >
         <div
           class="h-0.5 w-6 my-0.5 rounded-full bg-black dark:bg-white transition ease transform duration-300"
-          :class="app.isActive.value ? 'rotate-45 translate-y-1.5' : ''"
+          :class="app.isActive ? 'rotate-45 translate-y-1.5' : ''"
         ></div>
         <div
           class="h-0.5 w-6 my-0.5 rounded-full bg-black dark:bg-white transition ease transform duration-300"
-          :class="app.isActive.value ? 'opacity-0' : ''"
+          :class="app.isActive ? 'opacity-0' : ''"
         ></div>
         <div
           class="h-0.5 w-6 my-0.5 rounded-full bg-black dark:bg-white transition ease transform duration-300"
-          :class="app.isActive.value ? '-rotate-45 -translate-y-1.5' : ''"
+          :class="app.isActive ? '-rotate-45 -translate-y-1.5' : ''"
         ></div>
         <div v-auto-animate>
           <div
             class="relative"
-            v-if="app.isActive.value"
+            v-if="app.isActive"
             v-on-click-outside="onClickOutsideHandler"
           >
             <div
