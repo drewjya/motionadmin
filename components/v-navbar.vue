@@ -38,6 +38,7 @@ const props = defineProps({
     default: false,
   },
 });
+const auth = useAuth();
 </script>
 
 <template>
@@ -71,7 +72,18 @@ const props = defineProps({
             <div
               class="absolute dark:bg-slate-900 bg-slate-400 h-[calc(100vh-80px)] w-40 z-50 flex flex-col justify-between pb-4 top-[31px] -left-[24px]"
             >
-              <v-link />
+              <div>
+                <v-link />
+              </div>
+              <div class="px-4 w-full" v-if="app.accessToken">
+                <u-button
+                  class="w-full justify-center"
+                  dynamic
+                  icon="i-solar-logout-2-bold"
+                  @click="auth.logout()"
+                  >Logout</u-button
+                >
+              </div>
             </div>
           </div>
         </div>

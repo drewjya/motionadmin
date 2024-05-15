@@ -3,7 +3,7 @@ const auth = useAuth();
 </script>
 
 <template>
-  <div class="hidden md:block">
+  <div class="hidden md:block h-full">
     <div
       class="h-full flex flex-col dark:bg-slate-900 bg-slate-400 pb-8 justify-between items-center"
     >

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { z } from "zod";
+import type { CategoryProduct, SResponse } from "~/types/s-response";
 
 definePageMeta({
   layout: "form",
 });
+const path = apiPath();
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -11,6 +13,32 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
+
+const data = ref<CategoryProduct[]>([]);
+const loading = ref(true);
+
+onMounted(() => {
+  async function load() {
+    const body = await fetch(
+      "https://api.motionsportindonesia.id" + path.getCategory(1, 50),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const val: SResponse<CategoryProduct[]> = await body.json();
+    data.value = val.data ?? [];
+    loading.value = false;
+    console.log(val);
+  }
+
+  load();
+});
+
+const displayed = ref("Select Categories");
+const notif = useNotification();
 
 const formD = useFormd({
   schema: z.object({
@@ -46,9 +74,66 @@ const formD = useFormd({
       .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
         message: "Please choose .json format files only",
       }),
+    categories: z.array(z.number(), {
+      required_error: "Categories is required",
+      invalid_type_error: "Categories must be a number",
+    }),
   }),
-  onSubmit: async (event, d) => {},
+  initial: {},
+  onSubmit: async (event, d) => {
+    const form = new FormData();
+    form.append("name", event.data.name);
+    form.append("price", event.data.price.toString());
+    form.append("serialCode", event.data.serialCode);
+    form.append("stock", event.data.stock.toString());
+    form.append("description", event.data.description);
+    form.append("image", event.data.image);
+    form.append("categories", event.data.categories.join(", "));
+
+    const app = useApp();
+    const data = await useFetch<SResponse<any>>(path.postProduct(), {
+      baseURL: "https://api.motionsportindonesia.id",
+      method: "POST",
+      body: form,
+      headers: {
+        Authorization: `Bearer ${app.accessToken ?? "invalid_token"}`,
+      },
+    });
+    const error: SResponse<any> | undefined | null = data.error.value?.data;
+    if (error) {
+      console.log(error);
+
+      throw error;
+    }
+
+    const val = data.data.value;
+    if (val) {
+      const msg = Object.entries(val.messages).find(([key, validationCode]) => {
+        return key === "@root";
+      });
+
+      notif.ok({
+        message: `${msg ? msg[1] : "Success"}`,
+      });
+    }
+    navigateTo("/product");
+  },
   onError: async (event, d) => {},
+});
+
+const selected = ref(<CategoryProduct[]>[]);
+watch(selected, (v) => {
+  const a = formD.state.categories;
+  if (v.length === 0) {
+    formD.state.categories = [];
+    displayed.value = "Select Categories";
+    return;
+  }
+  const cate = v.map((e) => e.id);
+  formD.state.categories = cate;
+  const dis = v.map((e) => `${e.name}`).join(", ");
+
+  displayed.value = dis;
 });
 
 const url = ref();
@@ -64,20 +149,36 @@ const uploadImage = (e: FileList) => {
 <template>
   <v-form :form="formD" class="flex flex-col gap-4">
     <u-form-group label="Name" name="name">
-      <UInput v-model="formD.state.name" />
+      <u-input v-model="formD.state.name" />
     </u-form-group>
 
     <u-form-group label="Price" name="price">
-      <UInput v-model.number="formD.state.price" type="number" />
+      <u-input v-model.number="formD.state.price" type="number" />
     </u-form-group>
     <u-form-group label="Serial Code" name="serialCode">
-      <UInput v-model="formD.state.serialCode" />
+      <u-input v-model="formD.state.serialCode" />
     </u-form-group>
     <u-form-group label="Stock" name="stock">
-      <UInput v-model="formD.state.stock" />
+      <u-input v-model.number="formD.state.stock" />
     </u-form-group>
     <u-form-group label="Description" name="description">
-      <UInput v-model="formD.state.description" />
+      <u-input v-model="formD.state.description" />
+    </u-form-group>
+    <u-form-group label="Categories" name="categories">
+      <u-select-menu
+        v-model="selected"
+        :options="data"
+        :loading="loading"
+        multiple
+        trailing
+        option-attribute="name"
+        by="id"
+        placeholder="Select Categories"
+      >
+        <template #label>
+          <p>{{ displayed }}</p>
+        </template>
+      </u-select-menu>
     </u-form-group>
     <u-form-group label="Image" name="image">
       <button v-if="url" @click="preview = !preview" type="button">
@@ -87,7 +188,7 @@ const uploadImage = (e: FileList) => {
           class="h-auto w-[40%] mb-2 rounded-md border"
         />
       </button>
-      <UInput type="file" @change="uploadImage" />
+      <u-input type="file" @change="uploadImage" />
     </u-form-group>
     <u-button
       @click="formD.submit.value"

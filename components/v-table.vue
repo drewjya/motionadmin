@@ -30,7 +30,7 @@ const getItem = (val: any, key: string) => {
 </script>
 
 <template>
-  <div class="w-full overflow-x-auto border dark:border-gray-400">
+  <div class="w-full overflow-auto border dark:border-gray-400 max-h-[80vh]">
     <div class="w-full">
       <div class="grid-row">
         <div
