@@ -1,5 +1,4 @@
 import type { SResponse } from "~/types/s-response";
-import type { Token } from "./app";
 
 export function useAuth() {
   const app = useApp();
@@ -38,7 +37,7 @@ export function useAuth() {
         }
       );
 
-      const data: SResponse<Token> = await res.json();
+      const data: SResponse<User> = await res.json();
 
       if (!data.data) {
         throw data;
@@ -46,8 +45,10 @@ export function useAuth() {
 
       const user = data.data;
 
-      app.refreshToken = user.refresh_token;
-      app.accessToken = user.access_token;
+      app.refreshToken = user.token.refresh_token;
+
+      app.accessToken = user.token.access_token;
+
       return true;
     } catch (error) {
       notif.error({
