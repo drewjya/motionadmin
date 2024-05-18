@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { z } from "zod";
+import type { SResponse } from "~/types/s-response";
 
 definePageMeta({
   layout: "form",
@@ -11,6 +12,7 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
+const notif = useNotification();
 
 const formD = useFormd({
   schema: z.object({
@@ -30,7 +32,44 @@ const formD = useFormd({
         message: "Please choose .json format files only",
       }),
   }),
-  onSubmit: async (event, d) => {},
+  onSubmit: async (event, d) => {
+    const formData = new FormData();
+    const path = apiPath();
+
+    formData.append("title", event.data.title);
+    formData.append("tanggal", new Date(event.data.tanggal).toISOString());
+    formData.append("image", event.data.image);
+    formData.append("detail", "1");
+    console.log(formData);
+
+    const app = useApp();
+    const data = await useFetch<SResponse<any>>(path.postGallery(), {
+      baseURL: "https://api.motionsportindonesia.id",
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${app.accessToken ?? "invalid_token"}`,
+      },
+    });
+    const error: SResponse<any> | undefined | null = data.error.value?.data;
+    if (error) {
+      console.log(error);
+
+      throw error;
+    }
+
+    const val = data.data.value;
+    if (val) {
+      const msg = Object.entries(val.messages).find(([key, validationCode]) => {
+        return key === "@root";
+      });
+
+      notif.ok({
+        message: `${msg ? msg[1] : "Success"}`,
+      });
+    }
+    navigateTo("/product");
+  },
   onError: async (event, d) => {},
 });
 
@@ -77,3 +116,4 @@ const uploadImage = (e: FileList) => {
 </template>
 
 <style scoped></style>
+import type { SResponse } from "~/types/s-response";

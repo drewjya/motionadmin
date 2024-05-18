@@ -1,9 +1,19 @@
 <script lang="ts" setup>
+import type { SResponse } from "~/types/s-response";
 import { ColumnType } from "../../types/t-table";
 
-const isOpen = ref(false);
-
-const title = ref("");
+const page = ref(1);
+const limit = 10;
+const url = computed(() => apiPath().getNews(page.value, limit));
+const { data, error, refresh, pending } = await useFetch(url, {
+  baseURL: "https://api.motionsportindonesia.id",
+  transform: (data: SResponse<any>) => {
+    return {
+      value: data.data,
+      meta: data.meta,
+    };
+  },
+});
 </script>
 
 <template>
@@ -16,12 +26,18 @@ const title = ref("");
           label: 'ID',
           type: ColumnType.TEXT,
         },
-      ]"
-      :items="[
         {
-          id: '1',
+          key: 'title',
+          label: 'Title',
+          type: ColumnType.TEXT,
+        },
+        {
+          key: 'image',
+          label: 'Gambar',
+          type: ColumnType.IMAGE,
         },
       ]"
+      :items="data?.value"
     />
   </div>
 </template>

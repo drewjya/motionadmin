@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     ["@pinia/nuxt", { autoImports: ["defineStore", "defineStore"] }],
   ],
+  css: ["~/assets/main.css"],
   tiptap: {
     prefix: "Tiptap",
   },

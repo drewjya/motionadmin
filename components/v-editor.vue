@@ -130,6 +130,7 @@ const editor = useEditor({
         />
       </UTooltip>
     </div>
+
     <TiptapEditorContent
       v-model="edit"
       :editor="editor"

@@ -10,13 +10,15 @@ const { data, error, refresh, pending } = await useFetch(url, {
   baseURL: "https://api.motionsportindonesia.id",
   transform: (data: SResponse<Product<CategoryProduct>[]>) => {
     return {
-      value: data.data,
+      value: data.data ?? [],
       meta: data.meta,
     };
   },
 });
 
 const result = computed(() => {
+  console.log(data, "DATA MANA INI");
+
   return data?.value
     ? (data?.value.value.map((item: any) => {
         return {

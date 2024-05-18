@@ -21,7 +21,9 @@ onMounted(() => {
     buttonRef.value!.click();
   };
 });
+const error = ref();
 async function onError(event: FormErrorEvent) {
+  error.value = event.errors;
   emit("error", event.errors);
 }
 </script>
