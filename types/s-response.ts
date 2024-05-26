@@ -1,7 +1,7 @@
 export type SResponse<T> = {
   code: number;
   messages: Object;
-  data: T|undefined;
+  data: T | undefined;
   meta: Meta | undefined;
 };
 
@@ -29,4 +29,27 @@ export type CategoryProduct = {
   id: number;
   name: string;
   image?: string;
+};
+
+export type YT = {
+  ID: Number;
+  VideoId: string;
+  Thumbnail: string;
+};
+
+export type PromotionProduct = {
+  id: number;
+  product: {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    image: string;
+  };
+  image: string;
+};
+
+export type Banner = {
+  image: string;
 };

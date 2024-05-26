@@ -123,7 +123,7 @@ const formD = useFormd({
 
 const selected = ref(<CategoryProduct[]>[]);
 watch(selected, (v) => {
-  const a = formD.state.categories;
+  
   if (v.length === 0) {
     formD.state.categories = [];
     displayed.value = "Select Categories";
