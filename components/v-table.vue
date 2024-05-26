@@ -1,5 +1,15 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T">
 import { ColumnType, type Column } from "../types/t-table";
+
+
+const emit = defineEmits(['update', 'delete'])
+
+const onUpdate = (data: T)=>{
+  emit("update", data)
+}
+const onDelete = (data: T)=>{
+  emit("delete", data)
+}
 
 const props = defineProps({
   columns: {
@@ -7,7 +17,7 @@ const props = defineProps({
     required: true,
   },
   items: {
-    type: Object as PropType<any[]>,
+    type: Object as PropType<T[]>,
     required: false,
   },
   loading: {
@@ -18,6 +28,7 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  
 });
 
 const color = "red";
@@ -54,6 +65,10 @@ const getItem = (val: any, key: string) => {
             <p v-else-if="column.type === ColumnType.ARRAY">
               {{ getItem(item, column.key) }}
             </p>
+            <div v-else-if="column.type===ColumnType.ACTION" class="flex gap-4 items-center justify-center">
+                <u-button label="Edit"  @click="onUpdate(item)" />
+                <u-button label="Delete"  @click="onDelete(item)" />
+            </div>
 
             <p v-else>{{ getItem(item, column.key) }}</p>
           </div>

@@ -23,6 +23,7 @@ export const useApp = defineStore("GlobalAppStore", () => {
 
   const pages = page;
 
+  const router = useRouter();
   const pageForBanner = ["/gallery", "/products"];
   return {
     isActive,
@@ -36,5 +37,16 @@ export const useApp = defineStore("GlobalAppStore", () => {
       isActive.value = false;
     },
     refreshToken,
+
+    getAuthorization(){
+      if (!accessToken.value) {
+        router.push("/login");
+        return;
+      }else{
+        return {
+          Authorization: `Bearer ${accessToken.value}`
+        }
+      }
+    }
   };
 });

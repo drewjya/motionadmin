@@ -28,4 +28,5 @@ export type Product<T> = {
 export type CategoryProduct = {
   id: number;
   name: string;
+  image?: string;
 };

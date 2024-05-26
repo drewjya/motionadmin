@@ -4,6 +4,7 @@ export enum ColumnType {
   DATE = "date",
   IMAGE = "image",
   ARRAY = "array",
+  ACTION="action"
 }
 
 export type Column = {

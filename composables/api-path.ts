@@ -25,17 +25,15 @@ export default function () {
       return encodeURI(`/category`);
     },
     getBannerProduct() {
-      return encodeURI(`/banner-product`);
+      return encodeURI(`/banner`);
     },
     postBannerProduct() {
-      return encodeURI(`/banner-product`);
+      return encodeURI(`/banner`);
     },
-    getGalleryDisplayed() {
-      return encodeURI(`/gallery-displayed`);
+    getProductPromotion() {
+      return encodeURI(`/product/promotion`);
     },
-    postGalleryDisplayed() {
-      return encodeURI(`/gallery-displayed`);
-    },
+    
     getNews(page: number, limit: number) {
       return encodeURI(`/news?page=${page}&limit=${limit}`);
     },
@@ -43,10 +41,13 @@ export default function () {
       return encodeURI("/news");
     },
     getAbout() {
-      return encodeURI("/about");
+      return encodeURI("/compro");
+    },
+    youtube() {
+      return encodeURI("/youtube");
     },
     postAbout() {
-      return encodeURI("/about");
+      return encodeURI("/compro");
     },
   };
 }

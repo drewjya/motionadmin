@@ -72,7 +72,7 @@ const formD = useFormd({
         message: `${msg ? msg[1] : "Success"}`,
       });
     }
-    navigateTo("/product");
+    navigateTo("/news");
   },
   onError: async (event, d) => {},
 });
