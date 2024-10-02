@@ -20,6 +20,7 @@ export function useAuth() {
     app.refreshToken = user.token.refresh_token;
 
     app.accessToken = user.token.access_token;
+    console.log(app.refreshToken, app.accessToken);
 
     navigateTo("/gallery");
   }

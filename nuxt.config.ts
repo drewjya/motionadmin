@@ -17,4 +17,9 @@ export default defineNuxtConfig({
   ui: {
     global: true,
   },
+  runtimeConfig: {
+    public: {
+      baseUrl: 'https://api.motionsportindonesia.id'
+    }
+  }
 });
